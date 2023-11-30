@@ -74,15 +74,13 @@ def predict_labels(channels : List[str], data : np.ndarray, fs : float, referenc
     Scaler = MinMaxScaler()
     # Fit and transform the data
     X_scaler = Scaler.fit(segmented_data_input_train.reshape(-1, 3))
-
-    X_train_scaled = X_scaler.transform(segmented_data_input_train.reshape(-1, 3))
-
+    X_scaled = X_scaler.transform(segmented_data_input_train.reshape(-1, 3))
     # Reshape the scaled data back to the original shape
-    X_train_scaled = X_train_scaled.reshape(segmented_data_input_train.shape[0], segmented_data_input_train.shape[2] ,segmented_data_input_train.shape[1])
+    X_scaled = X_scaled.reshape(segmented_data_input_train.shape[0], segmented_data_input_train.shape[2] ,segmented_data_input_train.shape[1])
 
     model = keras.models.load_model("best_model_overlap.h5")
     #calculate the probability that seizure occurs on each segment
-    predictions = model.predict(X_train_scaled[:])
+    predictions = model.predict(X_scaled)
     samples_per_seg = 1000 # number of samples pro segment
     segment_duration = fs * samples_per_seg
     
